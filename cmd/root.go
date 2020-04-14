@@ -22,6 +22,7 @@ THE SOFTWARE.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -35,10 +36,17 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "workon",
+	Use:   "workon [project]",
 	Short: "Manage tmux sessions",
 	Long:  "",
-	Run:   func(cmd *cobra.Command, args []string) {},
+	Args: func(cmd *cobra.Command, args []string) error {
+		if len(args) < 1 {
+			return errors.New("No project or command given")
+		}
+		startCmd.Run(cmd, args)
+		return nil
+	},
+	Run: func(cmd *cobra.Command, args []string) {},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
