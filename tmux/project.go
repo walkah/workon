@@ -63,12 +63,29 @@ func StartProject(name string) {
 	tmux.Attach(name)
 }
 
+func ListProjects() error {
+	configDir := getConfigDir()
+	files, err := ioutil.ReadDir(configDir)
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+		name := file.Name()
+		ext := filepath.Ext(name)
+		fmt.Printf("%s\n", name[:len(name)-len(ext)])
+	}
+	return nil
+}
+
 // LoadProject loads and parses the config for the given project.
 func LoadProject(name string) (*Project, error) {
 	project := &Project{}
 
-	home, _ := homedir.Dir()
-	fileName := path.Join(home, ".workon", name+".yml")
+	fileName := path.Join(getConfigDir(), name+".yml")
 
 	data, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -95,6 +112,11 @@ func (p *Project) GetRoot() string {
 		fmt.Println("Unable to find root path")
 	}
 	return rootPath
+}
+
+func getConfigDir() string {
+	home, _ := homedir.Dir()
+	return path.Join(home, ".workon")
 }
 
 func sessionExists(name string) bool {
