@@ -35,12 +35,13 @@ func StartProject(name string) {
 			args := strings.Fields(command)
 			cmd := exec.Command(args[0], args[1:]...)
 			cmd.Dir = p.GetRoot()
-			output, err := cmd.CombinedOutput()
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			err := cmd.Run()
 			if err != nil {
-				fmt.Println("Unable to run start command:", err, output)
+				fmt.Println("Unable to run start command:", err)
 				os.Exit(1)
 			}
-			fmt.Println(string(output))
 		}
 	}
 
