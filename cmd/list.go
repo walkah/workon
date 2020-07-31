@@ -32,7 +32,7 @@ import (
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "A brief description of your command",
-	Long:  "",
+	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := tmux.ListProjects()
 		if err != nil {

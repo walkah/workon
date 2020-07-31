@@ -32,11 +32,8 @@ import (
 var newCmd = &cobra.Command{
 	Use:   "new [NAME]",
 	Short: "Create a new project",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("Provide a project name")
-			return
-		}
 		err := tmux.NewProject(args[0])
 		if err != nil {
 			fmt.Println("Unable to create project:", err)

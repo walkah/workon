@@ -22,8 +22,6 @@ THE SOFTWARE.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 	"github.com/walkah/workon/tmux"
 )
@@ -32,12 +30,8 @@ import (
 var startCmd = &cobra.Command{
 	Use:   "start [PROJECT]",
 	Short: "Start working on a project",
-	Long:  "",
+	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		if len(args) < 1 {
-			fmt.Println("No project given")
-			return
-		}
 		tmux.StartProject(args[0])
 	},
 }
