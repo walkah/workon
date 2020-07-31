@@ -18,7 +18,7 @@ import (
 type Project struct {
 	Name           string   `yaml:"name"`
 	Root           string   `yaml:"root"`
-	OnProjectStart []string `yaml:"on_project_start"`
+	OnProjectStart []string `yaml:"on_project_start,omitempty"`
 	Windows        []Window `yaml:"windows"`
 }
 
@@ -86,7 +86,7 @@ func ListProjects() error {
 func LoadProject(name string) (*Project, error) {
 	project := &Project{}
 
-	fileName := path.Join(getConfigDir(), name+".yml")
+	fileName := getConfigFilePath(name)
 
 	data, err := ioutil.ReadFile(fileName)
 	if err != nil {
@@ -107,6 +107,47 @@ func LoadProject(name string) (*Project, error) {
 	return project, err
 }
 
+func NewProject(name string) error {
+	project := &Project{
+		Name:           name,
+		Root:           "~/",
+		OnProjectStart: []string{""},
+		Windows:        make([]Window, 3),
+	}
+
+	project.Windows[0] = Window{
+		Name:     "shell",
+		Commands: []string{""},
+	}
+
+	project.Windows[1] = Window{
+		Name:     "server",
+		Commands: []string{""},
+	}
+
+	project.Windows[2] = Window{
+		Name:     "logs",
+		Commands: []string{""},
+	}
+
+	return project.Save()
+}
+
+func (p *Project) Save() error {
+	fileName := getConfigFilePath(p.Name)
+
+	_, err := os.Stat(fileName)
+	if err == nil {
+		return errors.New("Config file already exists")
+	}
+
+	data, err := yaml.Marshal(p)
+	if err != nil {
+		return err
+	}
+	return ioutil.WriteFile(fileName, data, 0644)
+}
+
 func (p *Project) GetRoot() string {
 	rootPath, err := homedir.Expand(p.Root)
 	if err != nil {
@@ -118,6 +159,10 @@ func (p *Project) GetRoot() string {
 func getConfigDir() string {
 	home, _ := homedir.Dir()
 	return path.Join(home, ".workon")
+}
+
+func getConfigFilePath(name string) string {
+	return path.Join(getConfigDir(), name+".yml")
 }
 
 func sessionExists(name string) bool {

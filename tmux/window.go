@@ -6,8 +6,8 @@ import (
 
 type Window struct {
 	Name     string   `yaml:"name"`
-	Root     string   `yaml:"root"`
-	Commands []string `yaml:"commands"`
+	Root     string   `yaml:"root,omitempty"`
+	Commands []string `yaml:"commands,omitempty"`
 	ID       string   `yaml:"-"`
 }
 
