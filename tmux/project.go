@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"syscall"
 
 	"github.com/mitchellh/go-homedir"
 	"gopkg.in/yaml.v2"
@@ -131,6 +132,27 @@ func NewProject(name string) error {
 	}
 
 	return project.Save()
+}
+
+func EditProject(name string) error {
+	fileName := getConfigFilePath(name)
+
+	_, err := os.Stat(fileName)
+	if err != nil {
+		return errors.New("Config file does not exist")
+	}
+
+	editorName := os.Getenv("EDITOR")
+	if editorName == "" {
+		return errors.New("EDITOR variable not defined")
+	}
+
+	editor, err := exec.LookPath(editorName)
+	if err != nil {
+		return err
+	}
+
+	return syscall.Exec(editor, []string{editorName, fileName}, os.Environ())
 }
 
 func (p *Project) Save() error {
