@@ -36,9 +36,10 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "workon [project]",
-	Short: "Manage tmux sessions",
-	Long:  "",
+	Version: "0.1.0",
+	Use:     "workon [project]",
+	Short:   "Manage tmux sessions",
+	Long:    "",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
 			return errors.New("No project or command given")
