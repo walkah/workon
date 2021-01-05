@@ -25,6 +25,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/spf13/cobra"
 
@@ -61,8 +62,22 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
+	ensureConfigDir()
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.workon.yaml)")
+}
+
+// ensureConfigDir ensures ~/.workon/ exists
+func ensureConfigDir() {
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	configDir := path.Join(home, ".workon")
+	if _, err = os.Stat(configDir); os.IsNotExist(err) {
+		os.Mkdir(configDir, 0755)
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
