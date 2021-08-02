@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 James Walker <walkah@walkah.net>
+Copyright © 2020-2021 James Walker <walkah@walkah.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,7 @@ import (
 	"path"
 
 	"github.com/spf13/cobra"
+	"github.com/walkah/workon/tmux"
 
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
@@ -37,7 +38,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Version: "0.1.0",
+	Version: "0.2.0",
 	Use:     "workon [project]",
 	Short:   "Manage tmux sessions",
 	Long:    "",
@@ -48,7 +49,16 @@ var rootCmd = &cobra.Command{
 		startCmd.Run(cmd, args)
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {},
+	ValidArgsFunction: completeProjects,
+	Run:               func(cmd *cobra.Command, args []string) {},
+}
+
+func completeProjects(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	projects, err := tmux.ProjectList()
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	return projects, cobra.ShellCompDirectiveNoFileComp
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

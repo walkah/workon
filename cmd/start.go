@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 James Walker <walkah@walkah.net>
+Copyright © 2020-2021 James Walker <walkah@walkah.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ var startCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		tmux.StartProject(args[0])
 	},
+	ValidArgsFunction: completeProjects,
 }
 
 func init() {

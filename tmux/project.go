@@ -66,21 +66,36 @@ func StartProject(name string) {
 }
 
 func ListProjects() error {
-	configDir := getConfigDir()
-	files, err := ioutil.ReadDir(configDir)
+	projects, err := ProjectList()
 	if err != nil {
 		return err
 	}
 
+	for _, project := range projects {
+		fmt.Printf("%s\n", project)
+	}
+	return nil
+}
+
+// ProjectList gets a list of
+func ProjectList() ([]string, error) {
+	configDir := getConfigDir()
+	files, err := ioutil.ReadDir(configDir)
+	if err != nil {
+		return nil, err
+	}
+
+	projects := []string{}
 	for _, file := range files {
 		if file.IsDir() {
 			continue
 		}
 		name := file.Name()
 		ext := filepath.Ext(name)
-		fmt.Printf("%s\n", name[:len(name)-len(ext)])
+		projects = append(projects, name[:len(name)-len(ext)])
 	}
-	return nil
+
+	return projects, nil
 }
 
 // LoadProject loads and parses the config for the given project.
