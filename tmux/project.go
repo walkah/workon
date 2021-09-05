@@ -146,7 +146,9 @@ func NewProject(name string) error {
 		Commands: []string{""},
 	}
 
-	return project.Save()
+	project.Save()
+
+	return EditProject(name)
 }
 
 func EditProject(name string) error {
