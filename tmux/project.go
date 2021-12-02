@@ -8,7 +8,6 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"syscall"
 
@@ -206,11 +205,12 @@ func getConfigFilePath(name string) string {
 
 func sessionExists(name string) bool {
 	t := Tmux{}
-	result, err := t.Exec("ls")
-	if err != nil {
-		return false
-	}
 
-	re := regexp.MustCompile(fmt.Sprintf("^%s:", name))
-	return re.MatchString(string(result))
+	sessions := t.ListSessions()
+	for _, s := range sessions {
+		if s == name {
+			return true
+		}
+	}
+	return false
 }

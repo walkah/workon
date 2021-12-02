@@ -42,6 +42,18 @@ func (t *Tmux) Attach(name string) {
 	}
 }
 
+func (t *Tmux) ListSessions() []string {
+	sessions := []string{}
+	result, err := t.Exec("ls", "-F", "#{session_name}")
+	if err != nil {
+		fmt.Println("Error:", err)
+		return sessions
+	}
+
+	lines := strings.Trim(string(result), "\n")
+	return strings.Split(lines, "\n")
+}
+
 func (t *Tmux) getBinary() string {
 	if t.BinPath != "" {
 		return t.BinPath
