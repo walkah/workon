@@ -29,25 +29,25 @@ func StartProject(name string) {
 		os.Exit(1)
 	}
 
-	// Run startup commands
-	if len(p.OnProjectStart) > 0 {
-		for _, command := range p.OnProjectStart {
-			args := strings.Fields(command)
-			cmd := exec.Command(args[0], args[1:]...)
-			cmd.Dir = p.GetRoot()
-			cmd.Stdout = os.Stdout
-			cmd.Stderr = os.Stderr
-			err := cmd.Run()
-			if err != nil {
-				fmt.Println("Unable to run start command:", err)
-				os.Exit(1)
-			}
-		}
-	}
-
 	tmux := CreateTmux(false)
 
 	if !sessionExists(name) {
+		// Run startup commands
+		if len(p.OnProjectStart) > 0 {
+			for _, command := range p.OnProjectStart {
+				args := strings.Fields(command)
+				cmd := exec.Command(args[0], args[1:]...)
+				cmd.Dir = p.GetRoot()
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
+				err := cmd.Run()
+				if err != nil {
+					fmt.Println("Unable to run start command:", err)
+					os.Exit(1)
+				}
+			}
+		}
+
 		tmux.Run("new-session", "-d", "-s", name, "-n", p.Windows[0].Name, "-c", p.Windows[0].Root)
 
 		for index, window := range p.Windows {
