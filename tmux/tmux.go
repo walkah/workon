@@ -46,7 +46,7 @@ func (t *Tmux) ListSessions() []string {
 	sessions := []string{}
 	result, err := t.Exec("ls", "-F", "#{session_name}")
 	if err != nil {
-		fmt.Println("Error:", err)
+		// No active sessions returns as an error.
 		return sessions
 	}
 
