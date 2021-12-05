@@ -54,6 +54,11 @@ func (t *Tmux) ListSessions() []string {
 	return strings.Split(lines, "\n")
 }
 
+func (t *Tmux) KillSession(name string) error {
+	_, err := t.Exec("kill-session", "-t", name)
+	return err
+}
+
 func (t *Tmux) getBinary() string {
 	if t.BinPath != "" {
 		return t.BinPath

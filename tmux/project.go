@@ -19,6 +19,7 @@ type Project struct {
 	Name           string   `yaml:"name"`
 	Root           string   `yaml:"root"`
 	OnProjectStart []string `yaml:"on_project_start,omitempty"`
+	OnProjectStop  []string `yaml:"on_project_stop,omitempty"`
 	Windows        []Window `yaml:"windows"`
 }
 
@@ -33,35 +34,36 @@ func StartProject(name string) {
 
 	if !sessionExists(name) {
 		// Run startup commands
-		if len(p.OnProjectStart) > 0 {
-			for _, command := range p.OnProjectStart {
-				args := strings.Fields(command)
-				cmd := exec.Command(args[0], args[1:]...)
-				cmd.Dir = p.GetRoot()
-				cmd.Stdout = os.Stdout
-				cmd.Stderr = os.Stderr
-				err := cmd.Run()
-				if err != nil {
-					fmt.Println("Unable to run start command:", err)
-					os.Exit(1)
-				}
-			}
-		}
+		p.RunCommands(p.OnProjectStart)
 
 		tmux.Run("new-session", "-d", "-s", name, "-n", p.Windows[0].Name, "-c", p.Windows[0].Root)
-
 		for index, window := range p.Windows {
 			if index > 0 {
 				window.Create(tmux)
 			}
-
 			window.SendCommands(tmux)
 		}
-
 		p.Windows[0].Focus(tmux)
 	}
 
 	tmux.Attach(name)
+}
+
+func StopProject(name string) {
+	if !sessionExists(name) {
+		return
+	}
+
+	t := Tmux{}
+	t.KillSession(name)
+
+	p, err := LoadProject(name)
+	if err != nil {
+		fmt.Println("Unable to load project:", err)
+		os.Exit(1)
+	}
+
+	p.RunCommands(p.OnProjectStop)
 }
 
 func ListProjects() error {
@@ -192,6 +194,21 @@ func (p *Project) GetRoot() string {
 		fmt.Println("Unable to find root path")
 	}
 	return rootPath
+}
+
+func (p *Project) RunCommands(commands []string) {
+	for _, command := range commands {
+		args := strings.Fields(command)
+		cmd := exec.Command(args[0], args[1:]...)
+		cmd.Dir = p.GetRoot()
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err := cmd.Run()
+		if err != nil {
+			fmt.Println("Unable to run command:", err)
+			os.Exit(1)
+		}
+	}
 }
 
 func getConfigDir() string {
