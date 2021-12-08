@@ -1,1 +1,3 @@
 workon
+result/
+.direnv/
