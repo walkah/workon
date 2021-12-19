@@ -34,9 +34,13 @@ var listCmd = &cobra.Command{
 	Short: "A brief description of your command",
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		err := tmux.ListProjects()
+		projects, err := tmux.ListProjects()
 		if err != nil {
 			fmt.Println("Unable to list projects:", err)
+		}
+
+		for _, project := range projects {
+			fmt.Println(project)
 		}
 	},
 }

@@ -44,7 +44,7 @@ var rootCmd = &cobra.Command{
 	Long:    "",
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 {
-			return errors.New("No project or command given")
+			return errors.New("no project or command given")
 		}
 		startCmd.Run(cmd, args)
 		return nil
@@ -54,7 +54,7 @@ var rootCmd = &cobra.Command{
 }
 
 func completeProjects(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	projects, err := tmux.ProjectList()
+	projects, err := tmux.ListProjects()
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}

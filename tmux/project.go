@@ -66,20 +66,24 @@ func StopProject(name string) {
 	p.RunCommands(p.OnProjectStop)
 }
 
-func ListProjects() error {
-	projects, err := ProjectList()
+func ListActiveProjects() ([]string, error) {
+	activeProjects := []string{}
+
+	projects, err := ListProjects()
 	if err != nil {
-		return err
+		return activeProjects, err
 	}
 
 	for _, project := range projects {
-		fmt.Printf("%s\n", project)
+		if sessionExists(project) {
+			activeProjects = append(activeProjects, project)
+		}
 	}
-	return nil
+	return activeProjects, nil
 }
 
 // ProjectList gets a list of
-func ProjectList() ([]string, error) {
+func ListProjects() ([]string, error) {
 	configDir := getConfigDir()
 	files, err := ioutil.ReadDir(configDir)
 	if err != nil {
@@ -112,7 +116,7 @@ func LoadProject(name string) (*Project, error) {
 
 	err = yaml.Unmarshal(data, project)
 	if len(project.Windows) < 1 {
-		return project, errors.New("No windows defined")
+		return project, errors.New("no windows defined")
 	}
 
 	rootPath := project.GetRoot()
@@ -157,7 +161,7 @@ func EditProject(name string) error {
 
 	_, err := os.Stat(fileName)
 	if err != nil {
-		return errors.New("Config file does not exist")
+		return errors.New("config file does not exist")
 	}
 
 	editorName := os.Getenv("EDITOR")
@@ -178,7 +182,7 @@ func (p *Project) Save() error {
 
 	_, err := os.Stat(fileName)
 	if err == nil {
-		return errors.New("Config file already exists")
+		return errors.New("config file already exists")
 	}
 
 	data, err := yaml.Marshal(p)

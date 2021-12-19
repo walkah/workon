@@ -33,11 +33,14 @@ var psCmd = &cobra.Command{
 	Use:   "ps",
 	Short: "List currently running projects.",
 	Run: func(cmd *cobra.Command, args []string) {
-		t := tmux.Tmux{}
-		for _, project := range t.ListSessions() {
-			fmt.Println(project)
+		projects, err := tmux.ListActiveProjects()
+		if err != nil {
+			fmt.Println(err)
 		}
 
+		for _, project := range projects {
+			fmt.Println(project)
+		}
 	},
 }
 

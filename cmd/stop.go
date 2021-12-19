@@ -36,8 +36,7 @@ var stopCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		var projects []string
 		if len(args) == 0 {
-			t := tmux.Tmux{}
-			projects = t.ListSessions()
+			projects, _ = tmux.ListActiveProjects()
 		} else {
 			projects = args
 		}
