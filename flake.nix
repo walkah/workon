@@ -21,7 +21,7 @@
 
         devShell = pkgs.mkShell {
           name = "workon";
-          buildInputs = with pkgs; [ go ];
+          buildInputs = with pkgs; [ go gopls ];
         };
       }
     );
