@@ -2,7 +2,7 @@
   description = "Manage tmux for what you work on.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/release-21.11";
+    nixpkgs.url = "github:nixos/nixpkgs/release-22.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -14,7 +14,7 @@
         packages.workon = pkgs.buildGoModule {
           name = "workon";
           src = self;
-          vendorSha256 = "sha256-Jao45EKn3rybLa8Hi6xvE8ByPESz7Tvx4b8JehTCWww=";
+          vendorSha256 = "sha256-ia0Z9yz2LrRAd9huncFtl/a6R3/gRpqbg6TdnauvEmQ=";
         };
 
         defaultPackage = self.packages.${system}.workon;
