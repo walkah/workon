@@ -1,6 +1,7 @@
 package tmux
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -18,7 +19,10 @@ func CreateTmux(debug bool) *Tmux {
 }
 
 func (t *Tmux) Exec(args ...string) ([]byte, error) {
-	bin := t.getBinary()
+	bin, err := t.getBinary()
+	if err != nil {
+		return []byte{}, err
+	}
 	if t.Debug {
 		fmt.Println(bin, strings.Join(args, " "))
 	}
@@ -32,26 +36,32 @@ func (t *Tmux) Run(args ...string) {
 	}
 }
 
-func (t *Tmux) Attach(name string) {
+func (t *Tmux) Attach(name string) error {
 	args := []string{}
 	args = append(args, "-u", "attach-session", "-t", name)
 
-	err := syscall.Exec(t.getBinary(), args, os.Environ())
+	bin, err := t.getBinary()
 	if err != nil {
-		fmt.Println("Error:", err)
+		return err
 	}
+	err = syscall.Exec(bin, args, os.Environ())
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func (t *Tmux) ListSessions() []string {
+func (t *Tmux) ListSessions() ([]string, error) {
 	sessions := []string{}
 	result, err := t.Exec("ls", "-F", "#{session_name}")
-	if err != nil {
+	if errors.Is(err, exec.ErrNotFound) {
 		// No active sessions returns as an error.
-		return sessions
+		return sessions, err
 	}
 
 	lines := strings.Trim(string(result), "\n")
-	return strings.Split(lines, "\n")
+	fmt.Println("Sessions", lines)
+	return strings.Split(lines, "\n"), nil
 }
 
 func (t *Tmux) KillSession(name string) error {
@@ -59,15 +69,15 @@ func (t *Tmux) KillSession(name string) error {
 	return err
 }
 
-func (t *Tmux) getBinary() string {
+func (t *Tmux) getBinary() (string, error) {
 	if t.BinPath != "" {
-		return t.BinPath
+		return t.BinPath, nil
 	}
 
 	tmux, err := exec.LookPath("tmux")
 	if err != nil {
-		fmt.Println("Error:", err)
+		return "", err
 	}
 
-	return tmux
+	return tmux, nil
 }

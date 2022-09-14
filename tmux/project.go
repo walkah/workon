@@ -227,7 +227,10 @@ func getConfigFilePath(name string) string {
 func sessionExists(name string) bool {
 	t := Tmux{}
 
-	sessions := t.ListSessions()
+	sessions, err := t.ListSessions()
+	if err != nil {
+		return false
+	}
 	for _, s := range sessions {
 		if s == name {
 			return true

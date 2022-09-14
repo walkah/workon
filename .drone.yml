@@ -1,0 +1,12 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: tests
+    image: golang:1.17
+    commands:
+      - apt-get update && apt-get install -y tmux
+      - go build -v
+      - go test -v ./...
