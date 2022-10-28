@@ -20,11 +20,22 @@
           version = "0.2.0";
           src = ./.;
           vendorSha256 = "sha256-ia0Z9yz2LrRAd9huncFtl/a6R3/gRpqbg6TdnauvEmQ=";
+          nativeBuildInputs = with pkgs; [
+            tmux
+            installShellFiles
+          ];
+
+          postInstall = ''
+            for shell in bash fish zsh; do
+              $out/bin/workon completion $shell > workon.$shell
+              installShellCompletion --$shell workon.$shell
+            done
+          '';
         };
 
-        defaultPackage = self.packages.${system}.workon;
+        packages.default = self.packages.${system}.workon;
 
-        devShell = pkgs.mkShell {
+        devShells.default = pkgs.mkShell {
           name = "workon";
           buildInputs = with pkgs; [ go gopls ];
         };
