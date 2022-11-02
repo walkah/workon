@@ -60,7 +60,6 @@ func (t *Tmux) ListSessions() ([]string, error) {
 	}
 
 	lines := strings.Trim(string(result), "\n")
-	fmt.Println("Sessions", lines)
 	return strings.Split(lines, "\n"), nil
 }
 

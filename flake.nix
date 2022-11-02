@@ -17,7 +17,7 @@
       {
         packages.workon = pkgs.buildGoModule {
           pname = "workon";
-          version = "0.2.0";
+          version = "0.2.1";
           src = ./.;
           vendorSha256 = "sha256-ia0Z9yz2LrRAd9huncFtl/a6R3/gRpqbg6TdnauvEmQ=";
           nativeBuildInputs = with pkgs; [

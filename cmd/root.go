@@ -38,7 +38,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Version: "0.2.0",
+	Version: "0.2.1",
 	Use:     "workon [project]",
 	Short:   "Manage tmux sessions",
 	Long:    "",
