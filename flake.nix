@@ -2,7 +2,7 @@
   description = "Manage tmux for what you work on.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/release-22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/release-23.05";
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -17,9 +17,9 @@
       {
         packages.workon = pkgs.buildGoModule {
           pname = "workon";
-          version = "0.2.1";
+          version = "0.2.2";
           src = ./.;
-          vendorSha256 = "sha256-ia0Z9yz2LrRAd9huncFtl/a6R3/gRpqbg6TdnauvEmQ=";
+          vendorSha256 = "sha256-+EFL3cry1hFqVSWxobU6+V/30jbejft8kM5RXgroTxM=";
           nativeBuildInputs = with pkgs; [
             tmux
             installShellFiles

@@ -1,5 +1,5 @@
 /*
-Copyright © 2020-2021 James Walker <walkah@walkah.net>
+Copyright © 2020-2023 James Walker <walkah@walkah.net>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -38,7 +38,7 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Version: "0.2.1",
+	Version: "0.2.2",
 	Use:     "workon [project]",
 	Short:   "Manage tmux sessions",
 	Long:    "",
