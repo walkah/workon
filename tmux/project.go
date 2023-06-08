@@ -202,6 +202,9 @@ func (p *Project) GetRoot() string {
 
 func (p *Project) RunCommands(commands []string) {
 	for _, command := range commands {
+		if command == "" {
+			continue
+		}
 		args := strings.Fields(command)
 		cmd := exec.Command(args[0], args[1:]...)
 		cmd.Dir = p.GetRoot()
