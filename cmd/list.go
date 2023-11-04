@@ -30,9 +30,10 @@ import (
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief description of your command",
-	Args:  cobra.NoArgs,
+	Use:     "list",
+	Short:   "A brief description of your command",
+	Args:    cobra.NoArgs,
+	Aliases: []string{"ls"},
 	Run: func(cmd *cobra.Command, args []string) {
 		projects, err := tmux.ListProjects()
 		if err != nil {
