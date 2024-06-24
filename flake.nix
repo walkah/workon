@@ -2,7 +2,7 @@
   description = "Manage tmux for what you work on.";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     flake-utils.url = "github:numtide/flake-utils";
     flake-compat = {
       url = "github:edolstra/flake-compat";
@@ -23,7 +23,7 @@
           pname = "workon";
           version = "0.2.3";
           src = ./.;
-          vendorHash = "sha256-tPW5oljrczYPQEK5gu8d8ao3Loz3/8aRi0xgVcJoqbU=";
+          vendorHash = "sha256-s2HCpKQ718q6L17wnJWf9yHkrcB1LZ6D185XX8MNt1Q=";
           nativeBuildInputs = with pkgs; [
             tmux
             installShellFiles
