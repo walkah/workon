@@ -9,6 +9,11 @@ import (
 	"syscall"
 )
 
+const (
+	VerticalSplit   = "vertical"
+	HorizontalSplit = "horizontal"
+)
+
 type Tmux struct {
 	BinPath string
 	Debug   bool
@@ -49,6 +54,24 @@ func (t *Tmux) Attach(name string) error {
 		return err
 	}
 	return nil
+}
+
+func (t *Tmux) SendKeys(target string, command string) error {
+	_, err := t.Exec("send-keys", "-t", target, command, "Enter")
+	return err
+}
+
+func (t *Tmux) SplitWindow(target string, split string, root string) error {
+	args := []string{"split-window"}
+	switch split {
+	case VerticalSplit:
+		args = append(args, "-v")
+	case HorizontalSplit:
+		args = append(args, "-h")
+	}
+	args = append(args, "-t", target, "-c", root)
+	_, err := t.Exec(args...)
+	return err
 }
 
 func (t *Tmux) ListSessions() ([]string, error) {
