@@ -3,7 +3,6 @@ package tmux
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
 	"path"
@@ -85,7 +84,7 @@ func ListActiveProjects() ([]string, error) {
 // ProjectList gets a list of
 func ListProjects() ([]string, error) {
 	configDir := getConfigDir()
-	files, err := ioutil.ReadDir(configDir)
+	files, err := os.ReadDir(configDir)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +108,7 @@ func LoadProject(name string) (*Project, error) {
 
 	fileName := getConfigFilePath(name)
 
-	data, err := ioutil.ReadFile(fileName)
+	data, err := os.ReadFile(fileName)
 	if err != nil {
 		return project, err
 	}
@@ -189,7 +188,7 @@ func (p *Project) Save() error {
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(fileName, data, 0644)
+	return os.WriteFile(fileName, data, 0644)
 }
 
 func (p *Project) GetRoot() string {
