@@ -26,13 +26,19 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
+        version = "0.3.0";
       in
       {
         packages.workon = pkgs.buildGoModule {
           pname = "workon";
-          version = "0.2.3";
+          version = version;
           src = ./.;
-          vendorHash = "sha256-Nm5EqzzU235RCnqVfisonzObQaWMlAP6/W2RboWTKIQ=";
+          vendorHash = "sha256-HLjR2041wlhOzfKG6PQe5/DVfAEAX6O7/jd2E/lJ43E=";
+
+          ldflags = [
+            "-s -w -X github.com/walkah/workon/cmd.version=${version}"
+          ];
+
           nativeBuildInputs = with pkgs; [
             tmux
             installShellFiles
@@ -51,6 +57,7 @@
         devShells.default = pkgs.mkShell {
           name = "workon";
           buildInputs = with pkgs; [
+            cobra-cli
             go
             gopls
           ];
