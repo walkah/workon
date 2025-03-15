@@ -26,14 +26,14 @@
       system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        version = "0.3.0";
+        version = "0.4.0";
       in
       {
         packages.workon = pkgs.buildGoModule {
           pname = "workon";
           version = version;
           src = ./.;
-          vendorHash = "sha256-HLjR2041wlhOzfKG6PQe5/DVfAEAX6O7/jd2E/lJ43E=";
+          vendorHash = "sha256-p3bwgNUbUsgJfANIOxG/+GXeh2/OddxYs0EK3JfnD4s=";
 
           ldflags = [
             "-s -w -X github.com/walkah/workon/cmd.version=${version}"

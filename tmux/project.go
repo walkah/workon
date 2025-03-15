@@ -15,11 +15,12 @@ import (
 )
 
 type Project struct {
-	Name           string   `yaml:"name"`
-	Root           string   `yaml:"root"`
-	OnProjectStart []string `yaml:"on_project_start,omitempty"`
-	OnProjectStop  []string `yaml:"on_project_stop,omitempty"`
-	Windows        []Window `yaml:"windows"`
+	Name           string            `yaml:"name"`
+	Root           string            `yaml:"root"`
+	Environment    map[string]string `yaml:"environment"`
+	OnProjectStart []string          `yaml:"on_project_start,omitempty"`
+	OnProjectStop  []string          `yaml:"on_project_stop,omitempty"`
+	Windows        []Window          `yaml:"windows"`
 }
 
 func StartProject(name string) {
@@ -36,6 +37,8 @@ func StartProject(name string) {
 		p.RunCommands(p.OnProjectStart)
 
 		tmux.Run("new-session", "-d", "-s", name, "-n", p.Windows[0].Name, "-c", p.Windows[0].Root)
+
+		p.SetEnvironment(tmux, name, p.Environment)
 		for index, window := range p.Windows {
 			if index > 0 {
 				window.Create(tmux)
@@ -214,6 +217,12 @@ func (p *Project) RunCommands(commands []string) {
 			fmt.Println("Unable to run command:", err)
 			os.Exit(1)
 		}
+	}
+}
+
+func (p *Project) SetEnvironment(tmux *Tmux, target string, environment map[string]string) {
+	for key, value := range environment {
+		tmux.Run("setenv", "-t", target, key, value)
 	}
 }
 
